@@ -2,9 +2,11 @@
 
 namespace App\Commands;
 
+use App\Services\Offer;
 use App\Services\OfferFetcher;
 use Illuminate\Console\Scheduling\Schedule;
 use DB;
+use Illuminate\Support\Facades\Mail;
 use LaravelZero\Framework\Commands\Command;
 use Illuminate\Support\Facades\Http;
 use PHPHtmlParser\Dom;
@@ -37,6 +39,23 @@ class FetchNewOffers extends Command
         $offerFetcher = $this->app->make('OfferFetcher');
         $newOffers = $offerFetcher->fetchNewOffers(config('offer_providers'));
 
+        // -- Save offers to db
+        foreach ($newOffers as $provider => $offers) {
+            /** @var Offer $offer */
+            foreach ($offers as $offer) {
+                DB::table('estate_offers')
+                    ->insert([
+                        'title' => $offer->getTitle(),
+                        'provider' => $provider,
+                        'link_to_offer' => $offer->getLink(),
+                        'link_to_offer_hash' => $offer->getHash(),
+                    ]);
+            }
+        }
+
+        // -- Notify
+
+        Mail::to('yavor.st.m@gmail.com')->send();
         echo ('hello');
         die;
 //        $newOffers = $fetcher->fetchNewOffers();
@@ -88,15 +107,6 @@ class FetchNewOffers extends Command
                 addInDb();
                 notify();
             }
-
-            DB::table('estate_offers')->insert(
-                [
-                    'title' => $titleOfOffer,
-                    'provider' => 'olx',
-                    'link_to_offer' => $linkToOffer,
-                    'link_to_offer_hash' => md5($linkToOffer),
-                ]
-            );
         }
 
         $offers = DB::table('estate_offers')->get();

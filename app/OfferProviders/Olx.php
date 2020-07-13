@@ -20,18 +20,19 @@ class Olx implements OfferProviderInterface
 
         $offers = [];
         $allOffersHtml = $html->find('div.offer-wrapper');
+
         foreach ($allOffersHtml as $offerHtml) {
             $offerLink = $offerHtml->find('.title-cell')[0]->find('a')[0]->getAttribute('href');
             $offerTitle = trim(strip_tags($offerHtml->find('.title-cell')[0]->find('a')[0]->innerHtml));;
 
-            $offers[] = (new Offer())
-                ->setTitle($offerTitle)
-                ->setLink($offerLink);
+            $offerHash = md5($offerLink);
 
-            die;
+            $offers[$offerHash] = (new Offer())
+                ->setTitle($offerTitle)
+                ->setLink($offerLink)
+                ->setHash($offerHash);
         }
 
-        $offers = DB::table('estate_offers')->get();
-        die;
+        return $offers;
     }
 }
