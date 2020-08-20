@@ -34,7 +34,6 @@ class FetchNewOffers extends Command
      */
     public function handle()
     {
-
         /** @var OfferFetcher $offerFetcher */
         $offerFetcher = $this->app->make('OfferFetcher');
         $newOffers = $offerFetcher->fetchNewOffers(config('offer_providers'));
@@ -55,9 +54,9 @@ class FetchNewOffers extends Command
 
         // -- Notify
 
-        Mail::to('yavor.st.m@gmail.com')->send();
-        echo ('hello');
-        die;
+    //        Mail::to('yavor.st.m@gmail.com')->send();
+    //        echo ('hello');
+    //        die;
 //        $newOffers = $fetcher->fetchNewOffers();
 //        $notifier->notifyForNewOffers($newOffers);
 //
