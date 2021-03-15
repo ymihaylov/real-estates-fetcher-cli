@@ -8,23 +8,43 @@ use DB;
 
 class OfferFetcher
 {
-    public function fetchNewOffers(array $providers): array
+    /**
+     * @param array $filters
+     * @return array
+     * @throws \Exception
+     */
+    public function fetchNewOffers(array $filters): array
     {
-        $newOffers = [];
-        foreach ($providers as $providerName => $providerConfig) {
+        $allNewOffers = [];
+        foreach ($filters as $filterName => $filterConfig) {
             /** @var OfferProviderInterface $provider */
-            $provider = new $providerConfig['class'];
-            $offers = $provider->fetchOffers($providerConfig['offers_link']);
-            $newOffers[$providerName] = $this->filterOnlyNewOffers($offers, $providerName);
+            $provider = new $filterConfig['class'];
+
+            if (!$provider instanceof OfferProviderInterface) {
+                throw new \Exception("Invalid configuration for filter: {$filterName}. Class value should be instance of OfferProviderInterface!");
+            }
+
+            $offers = $provider->fetchOffers($filterConfig['offers_link']);
+            $newOffersByFilter = $this->filterOnlyNewOffers($offers, $filterName);
+
+
+            if (!empty($newOffersByFilter)) {
+                $allNewOffers[$filterName] = $newOffersByFilter;
+            }
         }
 
-        return $newOffers;
+        return $allNewOffers;
     }
 
-    private function filterOnlyNewOffers(array $offers, string $provider): array
+    /**
+     * @param Offer[] $offers
+     * @param string $filterName
+     * @return array
+     */
+    private function filterOnlyNewOffers(array $offers, string $filterName): array
     {
         $existingOffers = DB::table('estate_offers')
-            ->where('provider', $provider)
+            ->where('filter_name', $filterName)
             ->get();
 
         foreach ($existingOffers as $existingOffer) {

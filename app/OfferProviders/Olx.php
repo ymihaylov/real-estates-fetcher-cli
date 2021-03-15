@@ -12,7 +12,7 @@ class Olx implements OfferProviderInterface
 {
     public function fetchOffers(string $url)
     {
-        /** @var \Illuminate\Http\Client\Response $reponse */
+        /** @var \Illuminate\Http\Client\Response $response */
         $response = Http::get($url);
 
         $dom = new Dom();

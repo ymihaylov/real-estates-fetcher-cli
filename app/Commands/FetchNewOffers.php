@@ -35,81 +35,33 @@ class FetchNewOffers extends Command
     public function handle()
     {
         /** @var OfferFetcher $offerFetcher */
-        $offerFetcher = $this->app->make('OfferFetcher');
-        $newOffers = $offerFetcher->fetchNewOffers(config('offer_providers'));
-
-        // -- Save offers to db
-        foreach ($newOffers as $provider => $offers) {
-            /** @var Offer $offer */
-            foreach ($offers as $offer) {
-                DB::table('estate_offers')
-                    ->insert([
-                        'title' => $offer->getTitle(),
-                        'provider' => $provider,
-                        'link_to_offer' => $offer->getLink(),
-                        'link_to_offer_hash' => $offer->getHash(),
-                    ]);
-            }
-        }
-
-        // -- Notify
-
-    //        Mail::to('yavor.st.m@gmail.com')->send();
-    //        echo ('hello');
-    //        die;
-//        $newOffers = $fetcher->fetchNewOffers();
-//        $notifier->notifyForNewOffers($newOffers);
+        Mail::raw("hello world");
+//        $offerFetcher = $this->app->make('OfferFetcher');
+//        $newOffersByFilters = $offerFetcher->fetchNewOffers(config('filters'));
 //
-//        // Fetcher
-//        foreach ($providers as $provider) {
-//            $offers = $provider->fetchOffers();
-//            $newOffers = $provider->filterOnlyNewOffers();
+//        foreach ($newOffersByFilters as $filterName => $offers) {
+//            $this->insertNewOffersInDb($filterName, $offers);
 //
-//            // $offers = [
-//            //  'olx' => [
-//            //      // ...
-//            // ],
-//            //  'imot.bg' => [
-//            //      // ...
-//            // ],
-//            //];
 //        }
-//
-//        // OLX
-//        // Offer 1
-//        // Offer 2
-//        // Offer 3
-//
-//        // imot.bg
-//        // Offer 1
-//        // Offer 2
-//        // Offer 3
-//
-//        // Inserter
-//        // Notifier
-//
-//
+    }
 
-        // =====---=====
-        $dom = new Dom();
-        /** @var \Illuminate\Http\Client\Response $reponse */
-        $response = Http::get('https://www.olx.bg/nedvizhimi-imoti/prodazhbi/apartamenti/oblast-sofiya-grad/?search%5Bfilter_float_price%3Ato%5D=80000&search%5Bfilter_enum_atype%5D%5B0%5D=2&search%5Bfilter_enum_atype%5D%5B1%5D=3&search%5Bfilter_float_space%3Afrom%5D=80&search%5Bfilter_float_cyear%3Ato%5D=2020&search%5Bfilter_enum_ctype%5D%5B0%5D=tuhla&search%5Bfilter_enum_floor%5D%5B0%5D=2&search%5Bfilter_enum_floor%5D%5B1%5D=3&search%5Bfilter_enum_floor%5D%5B2%5D=4&search%5Bfilter_enum_floor%5D%5B3%5D=5&search%5Bfilter_enum_floor%5D%5B4%5D=6&search%5Bfilter_enum_nlf%5D%5B0%5D=1');
-
-        $html = $dom->load($response->body());
-
-        $allOffers = $html->find('div.offer-wrapper');
-        foreach ($allOffers as $offerHtml) {
-            $linkToOffer = $offerHtml->find('.title-cell')[0]->find('a')[0]->getAttribute('href');
-            $titleOfOffer = trim(strip_tags($offerHtml->find('.title-cell')[0]->find('a')[0]->innerHtml));;
-
-            if (doesntExistsInDb()) {
-                addInDb();
-                notify();
-            }
+    /**
+     * @param string $filterName
+     * @param $offers
+     */
+    private function insertNewOffersInDb(string $filterName, $offers)
+    {
+        /** @var Offer $offer */
+        foreach ($offers as $offer) {
+            DB::table('estate_offers')
+                ->insert([
+                    'title' => $offer->getTitle(),
+                    'filter_name' => $filterName,
+                    'provider' => $offer->getProvider(),
+                    'link_to_offer' => $offer->getLink(),
+                    'link_to_offer_hash' => $offer->getHash(),
+                ]);
         }
-
-        $offers = DB::table('estate_offers')->get();
-        die;
     }
 
     /**

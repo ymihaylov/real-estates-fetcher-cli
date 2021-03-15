@@ -14,6 +14,9 @@ class Offer
     /** @var string */
     private $hash;
 
+    /** @var string */
+    private $provider;
+
     /**
      * @return string
      */
@@ -65,6 +68,24 @@ class Offer
     public function setHash(string $hash): Offer
     {
         $this->hash = $hash;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProvider(): string
+    {
+        return $this->provider;
+    }
+
+    /**
+     * @param string $provider
+     * @return Offer
+     */
+    public function setProvider(string $provider): Offer
+    {
+        $this->provider = $provider;
         return $this;
     }
 }

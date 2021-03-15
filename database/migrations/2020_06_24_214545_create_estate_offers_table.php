@@ -18,11 +18,12 @@ class CreateEstateOffersTable extends Migration
 
             $table->string('title');
             $table->string('provider', 100);
+            $table->string('filter_name', 100);
             $table->string('link_to_offer');
             $table->string('link_to_offer_hash');
             $table->timestamp('created_at')->useCurrent();
 
-            $table->index(['provider', 'link_to_offer_hash']);
+            $table->index(['provider', 'filter_name', 'link_to_offer_hash']);
         });
     }
 
