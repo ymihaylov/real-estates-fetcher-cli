@@ -2,14 +2,13 @@
 
 namespace App\Commands;
 
+use App\Mail\NewOffers;
 use App\Services\Offer;
 use App\Services\OfferFetcher;
-use Illuminate\Console\Scheduling\Schedule;
 use DB;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Mail;
 use LaravelZero\Framework\Commands\Command;
-use Illuminate\Support\Facades\Http;
-use PHPHtmlParser\Dom;
 
 class FetchNewOffers extends Command
 {
@@ -34,15 +33,16 @@ class FetchNewOffers extends Command
      */
     public function handle()
     {
+        Mail::to('yavor.st.m@gmail.com')->send(new NewOffers());
+        die;
         /** @var OfferFetcher $offerFetcher */
-        Mail::raw("hello world");
-//        $offerFetcher = $this->app->make('OfferFetcher');
-//        $newOffersByFilters = $offerFetcher->fetchNewOffers(config('filters'));
-//
-//        foreach ($newOffersByFilters as $filterName => $offers) {
-//            $this->insertNewOffersInDb($filterName, $offers);
-//
-//        }
+        $offerFetcher = $this->app->make('OfferFetcher');
+        $newOffersByFilters = $offerFetcher->fetchNewOffers(config('filters'));
+
+        foreach ($newOffersByFilters as $filterName => $offers) {
+            $this->insertNewOffersInDb($filterName, $offers);
+        }
+
     }
 
     /**

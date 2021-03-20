@@ -27,7 +27,6 @@ class OfferFetcher
             $offers = $provider->fetchOffers($filterConfig['offers_link']);
             $newOffersByFilter = $this->filterOnlyNewOffers($offers, $filterName);
 
-
             if (!empty($newOffersByFilter)) {
                 $allNewOffers[$filterName] = $newOffersByFilter;
             }

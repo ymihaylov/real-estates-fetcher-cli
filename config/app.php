@@ -54,6 +54,8 @@ return [
     */
 
     'providers' => [
+        \Illuminate\Mail\MailServiceProvider::class,
+        \Illuminate\View\ViewServiceProvider::class,
         App\Providers\AppServiceProvider::class,
     ],
 
