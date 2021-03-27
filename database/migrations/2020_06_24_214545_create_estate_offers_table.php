@@ -16,12 +16,13 @@ class CreateEstateOffersTable extends Migration
         Schema::create('estate_offers', function (Blueprint $table) {
             $table->id();
 
-            $table->string('title');
-            $table->string('provider', 100);
-            $table->string('filter_name', 100);
-            $table->string('link_to_offer');
-            $table->string('link_to_offer_hash');
-            $table->timestamp('created_at')->useCurrent();
+            $table->string('title')->nullable();
+            $table->string('provider', 100)->nullable();
+            $table->string('price', 100)->nullable()->nullable();
+            $table->string('filter_name', 100)->nullable();
+            $table->string('link_to_offer')->nullable();
+            $table->string('link_to_offer_hash')->nullable();
+            $table->timestamp('created_at')->useCurrent()->nullable();
 
             $table->index(['provider', 'filter_name', 'link_to_offer_hash']);
         });

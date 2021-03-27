@@ -33,8 +33,6 @@ class FetchNewOffers extends Command
      */
     public function handle()
     {
-        Mail::to('yavor.st.m@gmail.com')->send(new NewOffers());
-        die;
         /** @var OfferFetcher $offerFetcher */
         $offerFetcher = $this->app->make('OfferFetcher');
         $newOffersByFilters = $offerFetcher->fetchNewOffers(config('filters'));
@@ -43,6 +41,9 @@ class FetchNewOffers extends Command
             $this->insertNewOffersInDb($filterName, $offers);
         }
 
+        if (!empty($newOffersByFilters)) {
+            Mail::to('yavor.st.m@gmail.com')->send(new NewOffers($newOffersByFilters));
+        }
     }
 
     /**
@@ -57,6 +58,7 @@ class FetchNewOffers extends Command
                 ->insert([
                     'title' => $offer->getTitle(),
                     'filter_name' => $filterName,
+                    'price' => $offer->getPrice(),
                     'provider' => $offer->getProvider(),
                     'link_to_offer' => $offer->getLink(),
                     'link_to_offer_hash' => $offer->getHash(),

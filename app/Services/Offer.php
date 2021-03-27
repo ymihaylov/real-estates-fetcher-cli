@@ -17,6 +17,9 @@ class Offer
     /** @var string */
     private $provider;
 
+    /** @var string */
+    private $price;
+
     /**
      * @return string
      */
@@ -86,6 +89,24 @@ class Offer
     public function setProvider(string $provider): Offer
     {
         $this->provider = $provider;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrice(): string
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param string $price
+     * @return Offer
+     */
+    public function setPrice(string $price): Offer
+    {
+        $this->price = $price;
         return $this;
     }
 }

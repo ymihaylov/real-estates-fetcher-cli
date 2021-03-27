@@ -8,8 +8,8 @@ return [
 //    ],
 
     'imot_bg_bukstoun' => [
-        'name' => "Buckstoun",
+        'name' => "Бъкстоун 2 стайни и 3 стайни",
         'class' => \App\OfferProviders\ImotBg::class,
-        'offers_link' => 'https://www.imot.bg/pcgi/imot.cgi?act=3&slink=6hbvoc&f1=1',
+        'offers_link' => 'https://www.imot.bg/pcgi/imot.cgi?act=3&slink=6j0pqk&f1=1',
     ],
 ];

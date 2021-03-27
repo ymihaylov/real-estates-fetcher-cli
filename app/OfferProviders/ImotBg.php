@@ -22,15 +22,20 @@ class ImotBg implements OfferProviderInterface
 
         $offersOnPage = [];
         foreach ($allOffersList as $offerLink) {
+            $price = null;
+
+            $offerPrice = $offerLink->getParent()->find('.price')->toArray()[0]->text();;
             $offerHref = trim($offerLink->getAttribute('href'), '//');
             $offerTitle = trim(strip_tags(iconv('utf-8', 'windows-1251', $offerLink->innerHtml())));
             $offerHash = md5($offerHref);
 
+
             $offersOnPage[$offerHash] = (new Offer())
                 ->setProvider(self::getProviderName())
                 ->setTitle($offerTitle)
-                ->setLink($offerHref)
-                ->setHash($offerHash);
+                ->setLink('https://'.$offerHref)
+                ->setHash($offerHash)
+                ->setPrice($offerPrice);
         }
 
         return $offersOnPage;
