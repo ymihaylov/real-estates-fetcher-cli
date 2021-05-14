@@ -37,8 +37,8 @@ class FetchNewOffers extends Command
         $offerFetcher = $this->app->make('OfferFetcher');
         $newOffersByFilters = $offerFetcher->fetchNewOffers(config('filters'));
 
-        foreach ($newOffersByFilters as $filterName => $offers) {
-            $this->insertNewOffersInDb($filterName, $offers);
+        foreach ($newOffersByFilters as $filterName => $filterToOffers) {
+            $this->insertNewOffersInDb($filterName, $filterToOffers['offers']);
         }
 
         if (!empty($newOffersByFilters)) {
@@ -48,7 +48,7 @@ class FetchNewOffers extends Command
 
     /**
      * @param string $filterName
-     * @param $offers
+     * @param Offer[] $offers
      */
     private function insertNewOffersInDb(string $filterName, $offers)
     {

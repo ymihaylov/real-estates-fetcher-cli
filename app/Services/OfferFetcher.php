@@ -28,7 +28,10 @@ class OfferFetcher
             $newOffersByFilter = $this->filterOnlyNewOffers($offers, $filterName);
 
             if (!empty($newOffersByFilter)) {
-                $allNewOffers[$filterName] = $newOffersByFilter;
+                $allNewOffers[$filterName] = [
+                    'filterName' => !empty($filterConfig['name']) ? $filterConfig['name'] : $filterName,
+                    'offers' => $newOffersByFilter,
+                ];
             }
         }
 

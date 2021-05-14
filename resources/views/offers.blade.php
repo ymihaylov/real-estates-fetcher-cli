@@ -1,34 +1,18 @@
-@foreach ($offersByFilter as $filterName => $offers)
-    <table>
+@foreach ($offersByFilter as $filterName => $filterToOffers)
+    <table style="font-size: 20px; border: 1px solid black;">
         <thead>
             <tr>
-                <th colspan="2">{{ $filterName }}</th>
+                <th colspan="2" style="border: 1px solid black;  padding: 10px;">{{ $filterToOffers['filterName'] }}</th>
             </tr>
         </thead>
         <tbody>
-        @foreach ($offers as $offer)
+
+        @foreach ($filterToOffers['offers'] as $offer)
             <tr>
-                <td><a href="{{$offer->getLink()}}">{{ $offer->getTitle() }}</a></td>
-                <td>{{$offer->getPrice()}}</td>
+                <td style="border: 1px solid black;  padding: 10px;"><a href="{{$offer->getLink()}}">{{ $offer->getTitle() }}</a></td>
+                <td style="border: 1px solid black;  padding: 10px;">{{$offer->getPrice()}}</td>
             </tr>
         @endforeach
         </tbody>
     </table>
 @endforeach
-
-
-
-<style>
-    table {
-        width: 40%;
-        font-size: 30px;
-    }
-
-    table, th, td {
-        border: 1px solid black;
-    }
-
-    th, td {
-        padding: 10px;
-    }
-</style>
